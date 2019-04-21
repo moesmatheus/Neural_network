@@ -1,4 +1,10 @@
 import keras
+from matplotlib import pyplot as plt
+import numpy as np
+import seaborn as sns
+import pandas as pd
+import warnings
+warnings.simplefilter('ignore')
 
 #Set of AI models using Keras API
 
@@ -71,6 +77,78 @@ class ANN():
     
     def eval(self,x,y):
         return  self.model.evaluate(x, y, verbose=self.verbose)
+    
+    def plot_loss(self):        
+        frame = pd.DataFrame(data = np.array([self.model.history.history['val_loss'],
+          self.model.history.history['loss']]).transpose(),columns=['Test','Train'])
+
+        sns.lineplot(data = frame, palette="tab10",linewidth=2.5)
+        
+        plt.show()
+        
+    def plot_acc(self):
+        try:            
+            frame = pd.DataFrame(data = np.array([self.model.history.history['val_acc'],
+               self.model.history.history['acc']]).transpose(),columns=['Test','Train'])
+
+            sns.lineplot(data = frame, palette="tab10",linewidth=2.5)
+            
+            plt.show()
+        except: 
+            print('No accuracy on model')
+            
+    def plot_scatter(self,x,y):
+        
+        pred = self.model.predict(x)
+        
+        ax_x = pred.reshape((-1))
+        
+        ax_y = y.reshape((-1))
+        
+        sns.jointplot(x = ax_x, y = ax_y,
+              kind='reg', color='b').set_axis_labels('Prediction','Actual')
+        
+        join_arr = np.concatenate((ax_x,ax_y))
+        mini = np.min(join_arr)
+        maxi = np.max(join_arr)             
+        plt.plot([mini,maxi],[mini,maxi],'g')              
+                      
+        plt.show()
+        
+    def plot_scatter_var(self,x,y):
+        
+        pred = self.model.predict(x)
+        
+        ax_x = (pred - x[:,:-1]).reshape(-1)
+        ax_y = (y-x[:,:-1]).reshape(-1)
+        
+        sns.jointplot(x = ax_x, y=ax_y,
+              kind='reg', color='b').set_axis_labels('Actual','Prediction')
+        
+        join_arr = np.concatenate((ax_x,ax_y))
+        mini = np.min(join_arr)
+        maxi = np.max(join_arr)             
+        plt.plot([mini,maxi],[mini,maxi],'g')
+        
+        plt.show()
+        
+    def plot_logits(self,x,y):
+        
+        pred = self.model.predict(x)
+        
+        df = pd.DataFrame({'actual':np.argmax(y, axis = 1),
+                   'prediction':np.argmax(pred, axis = 1)})
+        
+        c = df.groupby('actual')['prediction'].value_counts().unstack().fillna(0)
+        
+        sns.heatmap(c,robust = True, annot = True)
+        
+        plt.show()
+        
+        
+        
+        
+            
         
         
 #Convolutional Neural Network        
@@ -155,6 +233,63 @@ class CNN():
     def eval(self,x,y):
         return  self.model.evaluate(x, y, verbose=self.verbose)
 
+    def plot_loss(self):        
+        frame = pd.DataFrame(data = np.array([self.model.history.history['val_loss'],
+          self.model.history.history['loss']]).transpose(),columns=['Test','Train'])
+
+        sns.lineplot(data = frame, palette="tab10",linewidth=2.5)
+        
+        plt.show()
+        
+    def plot_acc(self):
+        try:            
+            frame = pd.DataFrame(data = np.array([self.model.history.history['val_acc'],
+               self.model.history.history['acc']]).transpose(),columns=['Test','Train'])
+
+            sns.lineplot(data = frame, palette="tab10",linewidth=2.5)
+            
+            plt.show()
+        except: 
+            print('No accuracy on model')
+    
+    def plot_scatter(self,x,y):
+        
+        pred = self.model.predict(x)
+        
+        ax_x = pred.reshape((-1))
+        
+        ax_y = y.reshape((-1))
+        
+        sns.jointplot(x = ax_x, y = ax_y,
+              kind='reg', color='b').set_axis_labels('Prediction','Actual')
+        
+        join_arr = np.concatenate((ax_x,ax_y))
+        mini = np.min(join_arr)
+        maxi = np.max(join_arr)             
+        plt.plot([mini,maxi],[mini,maxi],'g')              
+                      
+        plt.show()    
+    
+    def plot_logits(self,x,y):
+        
+        pred = self.model.predict(x)
+        
+        df = pd.DataFrame({'actual':np.argmax(y, axis = 1),
+                   'prediction':np.argmax(pred, axis = 1)})
+        
+        c = df.groupby('actual')['prediction'].value_counts().unstack().fillna(0)
+        
+        sns.heatmap(c,robust = True, annot = True)
+        
+        plt.show()
+        
+        
+    
+    
+    
+    
+    
+    
 #Recurrent Neural Network
 class RNN():
     def __init__(
@@ -235,6 +370,78 @@ class RNN():
     def eval(self,x,y):
         return  self.model.evaluate(x, y, verbose=self.verbose)
     
+    def plot_loss(self):        
+        frame = pd.DataFrame(data = np.array([self.model.history.history['val_loss'],
+          self.model.history.history['loss']]).transpose(),columns=['Test','Train'])
+
+        sns.lineplot(data = frame, palette="tab10",linewidth=2.5)
+        
+        plt.show()
+        
+    def plot_acc(self):
+        try:            
+            frame = pd.DataFrame(data = np.array([self.model.history.history['val_acc'],
+               self.model.history.history['acc']]).transpose(),columns=['Test','Train'])
+
+            sns.lineplot(data = frame, palette="tab10",linewidth=2.5)
+            
+            plt.show()
+        except: 
+            print('No accuracy on model')    
+    
+    def plot_scatter(self,x,y):
+        
+        pred = self.model.predict(x)
+        
+        ax_x = pred.reshape((-1))
+        
+        ax_y = y.reshape((-1))
+        
+        sns.jointplot(x = ax_x, y = ax_y,
+              kind='reg', color='b').set_axis_labels('Prediction','Actual')
+        
+        join_arr = np.concatenate((ax_x,ax_y))
+        mini = np.min(join_arr)
+        maxi = np.max(join_arr)             
+        plt.plot([mini,maxi],[mini,maxi],'g')              
+                      
+        plt.show()
+        
+    def plot_scatter_var(self,x,y):
+        
+        pred = self.model.predict(x)
+        
+        ax_x = (pred - x[:,:-1]).reshape(-1)
+        ax_y = (y-x[:,:-1]).reshape(-1)
+        
+        sns.jointplot(x = ax_x, y=ax_y,
+              kind='reg', color='b').set_axis_labels('Actual','Prediction')
+        
+        join_arr = np.concatenate((ax_x,ax_y))
+        mini = np.min(join_arr)
+        maxi = np.max(join_arr)             
+        plt.plot([mini,maxi],[mini,maxi],'g')
+        
+        plt.show()
+        
+    def plot_logits(self,x,y):
+        
+        pred = self.model.predict(x)
+        
+        df = pd.DataFrame({'actual':np.argmax(y, axis = 1),
+                   'prediction':np.argmax(pred, axis = 1)})
+        
+        c = df.groupby('actual')['prediction'].value_counts().unstack().fillna(0)
+        
+        sns.heatmap(c,robust = True, annot = True)
+        
+        plt.show()    
+    
+    
+    
+    
+    
+    
     
 #Recurrent Neural Network
 class RNN_multistep():
@@ -262,7 +469,9 @@ class RNN_multistep():
         for i in self.lstm_cells:
             if self.rnn_type == 'lstm':
                 self.model.add(keras.layers.LSTM(i,dropout = self.dropout, 
-                    activation = self.activation,return_sequences = True))
+                    activation = self.activation,return_sequences = True
+                                                 #,stateful=True,batch_input_shape=(1)
+                                                ))
             else:
                 self.model.add(keras.layers.GRU(i,dropout = self.dropout, 
                     activation = self.activation,return_sequences = True))
@@ -289,34 +498,49 @@ class RNN_multistep():
         
     def fit_model(
             self,
-            x,
-            y,
+            x_train,
+            y_train,
             batch_size,
             epochs,
-            validation_split,
-            verbose = 1
+            validation_split = None,
+            x_test = None,
+            y_test = None,
+            verbose = 1,
             ):
         
-        self.x_train = x
-        self.y_train = y
+        self.__dict__.update(locals())
+        
         if self.crop[1] == 0:
             self.y_train = self.y_train[:,self.crop[0]:]
+            self.y_test = self.y_test[:,self.crop[0]:]
         else:
             self.y_train = self.y_train[:,self.crop[0]:-self.crop[1]]
+            self.y_test = self.y_test[:,self.crop[0]:-self.crop[1]]
+            
         self.batch_size = batch_size
         self.epochs = epochs
         self.validation_split = validation_split
         self.verbose = verbose
         
         #Fit model
-        self.model.fit(
-          x = self.x_train,
-          y = self.y_train,
-          batch_size=self.batch_size,
-          epochs=self.epochs,
-          verbose=self.verbose,
-          validation_split = self.validation_split
-         )
+        if self.validation_split != None:
+            self.history = self.model.fit(
+              x = self.x_train,
+              y = self.y_train,
+              batch_size = self.batch_size,
+              epochs = self.epochs,
+              verbose = self.verbose,
+              validation_split = self.validation_split
+             )
+        else:
+            self.history = self.model.fit(
+              x = self.x_train,
+              y = self.y_train,
+              batch_size = self.batch_size,
+              epochs = self.epochs,
+              verbose = self.verbose,
+              validation_data = (self.x_test,self.y_test)
+             )
         
     def predict(self,x):
         return self.model.predict(x)
@@ -324,3 +548,78 @@ class RNN_multistep():
     def eval(self,x,y):
         return  self.model.evaluate(
             x, y[:,self.crop[0]:-self.crop[1]], verbose=self.verbose)
+    
+    def plot_loss(self):        
+        frame = pd.DataFrame(data = np.array([self.model.history.history['val_loss'],
+          self.model.history.history['loss']]).transpose(),columns=['Test','Train'])
+
+        sns.lineplot(data = frame, palette="tab10",linewidth=2.5)
+        
+        plt.show()
+        
+    def plot_acc(self):
+        try:            
+            frame = pd.DataFrame(data = np.array([self.model.history.history['val_acc'],
+               self.model.history.history['acc']]).transpose(),columns=['Test','Train'])
+
+            sns.lineplot(data = frame, palette="tab10",linewidth=2.5)
+            
+            plt.show()
+        except: 
+            print('No accuracy on model')
+    
+    def plot_scatter(self,x,y):
+        
+        pred = self.model.predict(x)
+        
+        ax_x = pred.reshape((-1))
+        
+        if self.crop[1] == 0:
+            ax_y = y[:,self.crop[0]:].reshape(-1)
+            
+        else:
+            ax_y = y[:,self.crop[0]:-crop[1]].reshape(-1) 
+                          
+                
+        sns.jointplot(x = ax_x, y = ax_y,
+              kind='reg', color='b').set_axis_labels('Prediction','Actual')
+        
+        join_arr = np.concatenate((ax_x,ax_y))
+        mini = np.min(join_arr)
+        maxi = np.max(join_arr)             
+        plt.plot([mini,maxi],[mini,maxi],'g')              
+                      
+        plt.show()
+        
+    def plot_scatter_var(self,x,y):
+        
+        pred = self.model.predict(x)
+        
+        
+        if self.crop[1] == 0:
+            ax_x = (pred - x[:,self.crop[0]:]).reshape(-1)
+            ax_y = (y-x)[:,self.crop[0]:].reshape(-1)
+            
+        else:
+            ax_x = (pred - x[:,self.crop[0]:-self.crop[1]]).reshape(-1)
+            ax_y = (y-x)[:,self.crop[0]:-self.crop[1]].reshape(-1)
+        
+        sns.jointplot(x = ax_x, y=ax_y,
+              kind='reg', color='b').set_axis_labels('Actual','Prediction')
+        
+        join_arr = np.concatenate((ax_x,ax_y))
+        mini = np.min(join_arr)
+        maxi = np.max(join_arr)             
+        plt.plot([mini,maxi],[mini,maxi],'g')
+        
+        plt.show()
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
