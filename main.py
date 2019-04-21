@@ -47,30 +47,38 @@ class ANN():
         
     def fit_model(
             self,
-            x,
-            y,
+            x_train,
+            y_train,
             batch_size,
             epochs,
-            validation_split,
+            validation_split = None,
+            x_test = None,
+            y_test = None,
             verbose = 1
             ):
         
-        self.x_train = x
-        self.y_train = y
-        self.batch_size = batch_size
-        self.epochs = epochs
-        self.validation_split = validation_split
-        self.verbose = verbose
-        
+        self.__dict__.update(locals())
+                
         #Fit model
-        self.model.fit(
-          x = self.x_train,
-          y = self.y_train,
-          batch_size=self.batch_size,
-          epochs=self.epochs,
-          verbose=self.verbose,
-          validation_split = self.validation_split
-         )
+        if self.validation_split != None:
+            self.history = self.model.fit(
+              x = self.x_train,
+              y = self.y_train,
+              batch_size=self.batch_size,
+              epochs=self.epochs,
+              verbose=self.verbose,
+              validation_split = self.validation_split
+             )
+            
+        else:
+            self.history = self.model.fit(
+              x = self.x_train,
+              y = self.y_train,
+              batch_size=self.batch_size,
+              epochs=self.epochs,
+              verbose=self.verbose,
+              validation_data = (self.x_test,self.y_test)
+             ) 
         
     def predict(self,x):
         return self.model.predict(x)
@@ -119,8 +127,8 @@ class ANN():
         
         pred = self.model.predict(x)
         
-        ax_x = (pred - x[:,:-1]).reshape(-1)
-        ax_y = (y-x[:,:-1]).reshape(-1)
+        ax_x = (pred - x[:,-1:]).reshape(-1)
+        ax_y = (y-x[:,-1:]).reshape(-1)
         
         sns.jointplot(x = ax_x, y=ax_y,
               kind='reg', color='b').set_axis_labels('Actual','Prediction')
@@ -202,30 +210,39 @@ class CNN():
         
     def fit_model(
             self,
-            x,
-            y,
+            x_train,
+            y_train,
             batch_size,
             epochs,
-            validation_split,
+            validation_split = None,
+            x_test = None,
+            y_test = None,
             verbose = 1
             ):
         
-        self.x_train = x
-        self.y_train = y
-        self.batch_size = batch_size
-        self.epochs = epochs
-        self.validation_split = validation_split
-        self.verbose = verbose
+        self.__dict__.update(locals())
         
         #Fit model
-        self.model.fit(
-          x = self.x_train,
-          y = self.y_train,
-          batch_size=self.batch_size,
-          epochs=self.epochs,
-          verbose=self.verbose,
-          validation_split = self.validation_split
-         )
+        if self.validation_split != None:
+            self.history = self.model.fit(
+              x_train = self.x_train,
+              y_train = self.y_train,
+              batch_size=self.batch_size,
+              epochs=self.epochs,
+              verbose=self.verbose,
+              validation_split = self.validation_split
+             )
+            
+        else:
+            self.history = self.model.fit(
+              x = self.x_train,
+              y = self.y_train,
+              batch_size=self.batch_size,
+              epochs=self.epochs,
+              verbose=self.verbose,
+              validation_data = (self.x_test,self.y_test)
+             )  
+        
         
     def predict(self,x):
         return self.model.predict(x)
@@ -339,30 +356,38 @@ class RNN():
         
     def fit_model(
             self,
-            x,
-            y,
+            x_train,
+            y_train,
             batch_size,
             epochs,
-            validation_split,
+            validation_split = None,
+            x_test = None,
+            y_test = None,
             verbose = 1
             ):
         
-        self.x_train = x
-        self.y_train = y
-        self.batch_size = batch_size
-        self.epochs = epochs
-        self.validation_split = validation_split
-        self.verbose = verbose
-        
+        self.__dict__.update(locals())
+
         #Fit model
-        self.model.fit(
-          x = self.x_train,
-          y = self.y_train,
-          batch_size=self.batch_size,
-          epochs=self.epochs,
-          verbose=self.verbose,
-          validation_split = self.validation_split
-         )
+        if self.validation_split != None:
+            self.history = self.model.fit(
+              x = self.x_train,
+              y = self.y_train,
+              batch_size=self.batch_size,
+              epochs=self.epochs,
+              verbose=self.verbose,
+              validation_split = self.validation_split
+             )
+            
+        else:
+            self.history = self.model.fit(
+              x = self.x_train,
+              y = self.y_train,
+              batch_size=self.batch_size,
+              epochs=self.epochs,
+              verbose=self.verbose,
+              validation_data = (self.x_test,self.y_test)
+             )       
         
     def predict(self,x):
         return self.model.predict(x)
@@ -411,8 +436,8 @@ class RNN():
         
         pred = self.model.predict(x)
         
-        ax_x = (pred - x[:,:-1]).reshape(-1)
-        ax_y = (y-x[:,:-1]).reshape(-1)
+        ax_x = (pred - x[:,-1:].reshape(-1,1)).reshape(-1)
+        ax_y = (y-x[:,-1:].reshape(-1,1)).reshape(-1)
         
         sns.jointplot(x = ax_x, y=ax_y,
               kind='reg', color='b').set_axis_labels('Actual','Prediction')
