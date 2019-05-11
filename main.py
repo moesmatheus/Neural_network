@@ -829,6 +829,11 @@ class GAN():
                     plot_grid(generated.reshape(show_reshape),
                                    self.grid_show,cmap = self.cmap)
                     
+                    print('Gan loss: %.4f' 
+                          % self.gan.history.history['loss'][0])
+                    print('Discriminator loss: %.4f' 
+                          % self.discriminator.history.history['loss'][0])
+                    
 
         
 
