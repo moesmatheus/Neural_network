@@ -642,6 +642,26 @@ class RNN_multistep():
         
         plt.show()
         
+    def plot_logits(self,x,y):
+        
+        pred = self.model.predict(x).reshape(-1,self.n_out) 
+        
+        if self.crop[1] == 0:
+            ax_y = y[:,self.crop[0]:].reshape(-1,self.n_out)
+            
+        else:
+            ax_y = y[:,self.crop[0]:-crop[1]].reshape(-1,self.n_out) 
+            
+        
+        df = pd.DataFrame({'actual':np.argmax(ax_y, axis = 1),
+                   'prediction':np.argmax(pred, axis = 1)})
+        
+        c = df.groupby('actual')['prediction'].value_counts().unstack().fillna(0)
+        
+        sns.heatmap(c,robust = True, annot = True)
+        
+        plt.show()  
+        
 
 #Function to plot in a grid
 def plot_grid(ims, shape, cmap = None):
